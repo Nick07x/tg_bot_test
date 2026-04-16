@@ -310,4 +310,11 @@ bot.callbackQuery("ask_more", async (ctx) => {
 });
 
 // --- Vercel webhook handler ---
-module.exports = webhookCallback(bot, "std/http");
+module.exports = async (req, res) => {
+  try {
+    return await webhookCallback(bot, "express")(req, res);
+  } catch (error) {
+    console.error("Webhook error:", error);
+    res.status(200).json({ ok: true });
+  }
+};
