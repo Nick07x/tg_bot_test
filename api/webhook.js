@@ -1,4 +1,4 @@
-const { Bot, InlineKeyboard, webhookCallback } = require("grammy");
+const { Bot, InlineKeyboard } = require("grammy");
 const Groq = require("groq-sdk");
 
 // --- Инициализация ---
@@ -311,10 +311,16 @@ bot.callbackQuery("ask_more", async (ctx) => {
 
 // --- Vercel webhook handler ---
 module.exports = async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(200).json({ ok: true });
+  }
+
   try {
-    return await webhookCallback(bot, "express")(req, res);
+    const update = req.body;
+    await bot.handleUpdate(update);
+    res.status(200).json({ ok: true });
   } catch (error) {
-    console.error("Webhook error:", error);
+    console.error("Webhook error:", error.message);
     res.status(200).json({ ok: true });
   }
 };
