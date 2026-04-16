@@ -25,7 +25,9 @@ function mainMenu() {
     .text("Сроки", "terms")
     .row()
     .text("44-ФЗ и 223-ФЗ", "laws")
-    .text("Частые вопросы", "faq");
+    .text("Частые вопросы", "faq")
+    .row()
+    .text("План НКД по пилоту", "faq_nkd");
 }
 
 // --- /start ---
@@ -237,21 +239,19 @@ const knowledge = {
 
   faq_nkd: {
     title: "Какой план НКД по пилоту?",
-    text: "План на 2026 — 300 миллионов рублей.",
+    text: "300 миллионов до конца года",
     buttons: () =>
       new InlineKeyboard()
         .text("Что имеем по факту?", "faq_nkd_fact")
         .row()
-        .text("Другие вопросы", "faq")
         .text("Назад в меню", "back_menu"),
   },
 
   faq_nkd_fact: {
     title: "Что имеем по факту?",
-    text: "50 миллионов.",
+    text: "30 млн 😄",
     buttons: () =>
       new InlineKeyboard()
-        .text("Другие вопросы", "faq")
         .text("Назад в меню", "back_menu"),
   },
 
