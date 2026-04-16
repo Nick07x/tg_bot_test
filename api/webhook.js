@@ -312,15 +312,20 @@ bot.callbackQuery("ask_more", async (ctx) => {
 // --- Vercel webhook handler ---
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
-    return res.status(200).json({ ok: true });
+    return res.status(200).json({ status: "ok", method: req.method });
   }
 
   try {
-    const update = req.body;
+    let update = req.body;
+    if (typeof update === "string") {
+      update = JSON.parse(update);
+    }
+    console.log("Received update:", JSON.stringify(update).substring(0, 200));
     await bot.handleUpdate(update);
-    res.status(200).json({ ok: true });
+    console.log("Update processed successfully");
+    return res.status(200).json({ ok: true });
   } catch (error) {
-    console.error("Webhook error:", error.message);
-    res.status(200).json({ ok: true });
+    console.error("Webhook error:", error.stack || error.message);
+    return res.status(200).json({ error: error.message });
   }
 };
