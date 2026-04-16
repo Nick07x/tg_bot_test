@@ -1,21 +1,19 @@
 const { Bot, InlineKeyboard } = require("grammy");
 const Groq = require("groq-sdk");
-const { KNOWLEDGE_BASE } = require("../knowledge_base");
+const { buildContext } = require("../knowledge_base");
 
 // --- Инициализация ---
 const bot = new Bot(process.env.BOT_TOKEN);
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const SYSTEM_PROMPT = `Ты — эксперт-консультант по банковским гарантиям в России.
+const SYSTEM_PROMPT_BASE = `Ты — эксперт-консультант по банковским гарантиям СберБанка.
 Отвечай кратко, понятным языком, по делу. Максимум 1500 символов.
 Если вопрос не связан с банковскими гарантиями, тендерами или госзакупками — вежливо скажи, что специализируешься только на этой теме.
 Используй актуальное законодательство (44-ФЗ, 223-ФЗ).
 Не давай конкретных юридических рекомендаций — предлагай обратиться к специалисту для конкретного случая.
 
-При ответе опирайся в первую очередь на предоставленную ниже базу знаний. Если в ней есть релевантная информация — используй именно её. Если вопрос выходит за рамки базы знаний — отвечай на основе общих знаний о банковских гарантиях.
-
-${KNOWLEDGE_BASE}`;
+При ответе ОПИРАЙСЯ в первую очередь на предоставленные ниже выдержки из официальных документов СберБанка. Если в них есть релевантная информация — используй именно её и ссылайся на источник. Если выдержки не содержат ответа — отвечай на основе общих знаний о банковских гарантиях.`;
 
 // --- Главное меню ---
 function mainMenu() {
@@ -315,13 +313,16 @@ bot.on("message:text", async (ctx) => {
   await ctx.replyWithChatAction("typing");
 
   try {
+    const context = buildContext(userText);
+    const systemPrompt = `${SYSTEM_PROMPT_BASE}\n\n=== ВЫДЕРЖКИ ИЗ ДОКУМЕНТОВ ===\n${context}`;
+
     const chatCompletion = await groq.chat.completions.create({
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: systemPrompt },
         { role: "user", content: userText },
       ],
       model: "llama-3.3-70b-versatile",
-      temperature: 0.5,
+      temperature: 0.3,
       max_tokens: 1024,
     });
     const response =
