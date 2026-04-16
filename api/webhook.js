@@ -188,6 +188,10 @@ const knowledge = {
         .row()
         .text("Что если банк лишили лицензии?", "faq_license")
         .row()
+        .text("Кто создатель бота?", "faq_creator")
+        .row()
+        .text("План НКД по пилоту", "faq_nkd")
+        .row()
         .text("Назад в меню", "back_menu"),
   },
 
@@ -216,6 +220,35 @@ const knowledge = {
       "• Некоторые банки не работают с ИП\n" +
       "• Через брокеров обычно проще найти подходящий банк\n\n" +
       "Документы: те же + копия паспорта, свидетельство о регистрации ИП.",
+    buttons: () =>
+      new InlineKeyboard()
+        .text("Другие вопросы", "faq")
+        .text("Назад в меню", "back_menu"),
+  },
+
+  faq_creator: {
+    title: "Создатель бота",
+    text: "Этот бот создан Охапкиной Кристиной.",
+    buttons: () =>
+      new InlineKeyboard()
+        .text("Другие вопросы", "faq")
+        .text("Назад в меню", "back_menu"),
+  },
+
+  faq_nkd: {
+    title: "Какой план НКД по пилоту?",
+    text: "План на 2026 — 300 миллионов рублей.",
+    buttons: () =>
+      new InlineKeyboard()
+        .text("Что имеем по факту?", "faq_nkd_fact")
+        .row()
+        .text("Другие вопросы", "faq")
+        .text("Назад в меню", "back_menu"),
+  },
+
+  faq_nkd_fact: {
+    title: "Что имеем по факту?",
+    text: "50 миллионов.",
     buttons: () =>
       new InlineKeyboard()
         .text("Другие вопросы", "faq")
